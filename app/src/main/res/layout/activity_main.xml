@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="2"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/status_text"
+        android:saveEnabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:text="test"
+        android:layout_weight="0.06" />
+
+    <Button
+        android:id="@+id/button"
+        android:saveEnabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="0pt"
+        android:textColor="@android:color/black"
+        android:layout_weight="0.96"
+        android:background="@android:color/white"
+        android:text="OBD" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="0pt"
+        android:textColor="@android:color/holo_blue_bright"
+        android:background="@android:color/black"
+        android:layout_weight="1"
+        android:text="KODI" />
+
+</LinearLayout>
+

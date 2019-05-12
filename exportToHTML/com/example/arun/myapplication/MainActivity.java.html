@@ -1,0 +1,331 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(128,128,128); font-style: italic; }
+.s3 { color: rgb(0,128,0); font-weight: bold; }
+.s4 { color: rgb(0,0,255); }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+MainActivity.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">com.example.arun.myapplication; 
+ 
+</span><span class="s0">import </span><span class="s1">android.app.ActivityManager; 
+</span><span class="s0">import </span><span class="s1">android.app.NotificationManager; 
+</span><span class="s0">import </span><span class="s1">android.app.PendingIntent; 
+</span><span class="s0">import </span><span class="s1">android.bluetooth.BluetoothAdapter; 
+ 
+ 
+</span><span class="s0">import </span><span class="s1">android.content.BroadcastReceiver; 
+</span><span class="s0">import </span><span class="s1">android.content.ComponentName; 
+</span><span class="s0">import </span><span class="s1">android.content.Context; 
+</span><span class="s0">import </span><span class="s1">android.content.Intent; 
+</span><span class="s0">import </span><span class="s1">android.content.pm.PackageManager; 
+</span><span class="s0">import </span><span class="s1">android.graphics.drawable.Drawable; 
+</span><span class="s0">import </span><span class="s1">android.os.CountDownTimer; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AppCompatActivity; 
+</span><span class="s0">import </span><span class="s1">android.os.Bundle; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.NotificationCompat; 
+</span><span class="s0">import </span><span class="s1">android.util.Log; 
+</span><span class="s0">import </span><span class="s1">android.os.Handler; 
+</span><span class="s0">import </span><span class="s1">android.view.View; 
+</span><span class="s0">import </span><span class="s1">android.widget.Button; 
+</span><span class="s0">import </span><span class="s1">android.graphics.Color; 
+</span><span class="s0">import </span><span class="s1">android.widget.EditText; 
+</span><span class="s0">import </span><span class="s1">android.widget.TextView; 
+</span><span class="s0">import </span><span class="s1">android.widget.Toast; 
+ 
+</span><span class="s0">import </span><span class="s1">java.util.List; 
+</span><span class="s0">import </span><span class="s1">java.util.Timer; 
+</span><span class="s0">import </span><span class="s1">java.util.TimerTask; 
+ 
+ 
+</span><span class="s2">//menu za zbirat aplikacije</span><span class="s1"> 
+</span><span class="s2">//namesto imen imas ikone od aplikacij za gumbe</span><span class="s1"> 
+</span><span class="s2">//kaj se zgodi ce ni tega apkja instaleranga, check na zacetku</span><span class="s1"> 
+ 
+</span><span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity { 
+    </span><span class="s0">static </span><span class="s1">String TAG = </span><span class="s3">&quot;Mainactivity&quot;</span><span class="s1">; 
+    </span><span class="s0">static int </span><span class="s1">numtest = </span><span class="s4">0</span><span class="s1">; 
+    </span><span class="s0">static </span><span class="s1">String currapp = </span><span class="s3">&quot;&quot;</span><span class="s1">; 
+ 
+    </span><span class="s0">final static int </span><span class="s1">REQUEST_ENABLE_BT = </span><span class="s4">1</span><span class="s1">; 
+ 
+    TextView textInfo; 
+ 
+ 
+</span><span class="s2">/* 
+    @Override 
+    protected void onSaveInstanceState(Bundle outState) { 
+        super.onSaveInstanceState(outState); 
+        Log.i(TAG, &quot;onSaveInstanceState&quot;); 
+ 
+        final Button textview_pointer = 
+                (Button) findViewById(R.id.button); 
+        Drawable trneutni_tekst = textview_pointer.getBackground(); 
+        outState.getCharSequence(&quot;savedText&quot;, trneutni_tekst); 
+ 
+    } 
+ 
+    @Override 
+    protected void onRestoreInstanceState(Bundle savedInstanceState) { 
+        super.onRestoreInstanceState(savedInstanceState); 
+        Log.i(TAG, &quot;onRestoreInstanceState&quot;); 
+ 
+        final Button textview_pointer = 
+                (Button) findViewById(R.id.button); 
+ 
+        CharSequence trneutni_tekst = 
+                savedInstanceState.getCharSequence(&quot;savedText&quot;); 
+ 
+        textview_pointer.setBackgroundColor(trneutni_tekst); 
+    } 
+ 
+ 
+*/</span><span class="s1"> 
+ 
+ 
+ 
+</span><span class="s2">// checkbt</span><span class="s1"> 
+    </span><span class="s0">private void </span><span class="s1">checkBT(){ 
+        </span><span class="s2">//Log.i(TAG,&quot;checking bluetooth status, checkBT&quot;);</span><span class="s1"> 
+        </span><span class="s0">final </span><span class="s1">TextView s = (TextView) findViewById(R.id.status_text); 
+        </span><span class="s0">final </span><span class="s1">BluetoothAdapter nBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); 
+        </span><span class="s0">if </span><span class="s1">(!nBluetoothAdapter.isEnabled()) { 
+            s.setText(</span><span class="s3">&quot;disabled bluetooth&quot;</span><span class="s1">); 
+            s.setBackgroundColor(Color.RED); 
+ 
+        }</span><span class="s0">else</span><span class="s1">{ 
+            s.setText(</span><span class="s3">&quot;enabled bluetooth&quot;</span><span class="s1">); 
+            s.setBackgroundColor(Color.GREEN); 
+        } 
+    } 
+ 
+</span><span class="s2">//timer</span><span class="s1"> 
+ 
+    </span><span class="s0">private final static int </span><span class="s1">INTERVAL = </span><span class="s4">1000</span><span class="s1">; </span><span class="s2">//1 sec</span><span class="s1"> 
+    Handler mHandler = </span><span class="s0">new </span><span class="s1">Handler(); 
+ 
+    Runnable mHandlerTask = </span><span class="s0">new </span><span class="s1">Runnable() 
+    { 
+        @Override 
+        </span><span class="s0">public void </span><span class="s1">run() { 
+            checkBT(); 
+            mHandler.postDelayed(mHandlerTask, INTERVAL); 
+        } 
+    }; 
+ 
+    </span><span class="s0">public void </span><span class="s1">startRepeatingTask() 
+    { 
+        mHandlerTask.run(); 
+    } 
+ 
+    </span><span class="s0">public void </span><span class="s1">stopRepeatingTask() 
+    { 
+        mHandler.removeCallbacks(mHandlerTask); 
+    } 
+ 
+ 
+</span><span class="s2">//result from activity</span><span class="s1"> 
+    </span><span class="s0">protected void </span><span class="s1">onActivityResult(</span><span class="s0">int </span><span class="s1">requestCode, </span><span class="s0">int </span><span class="s1">resultCode, Intent data) { 
+ 
+        </span><span class="s0">super</span><span class="s1">.onActivityResult(requestCode, resultCode, data); 
+ 
+        </span><span class="s0">if</span><span class="s1">(requestCode == REQUEST_ENABLE_BT){ 
+            </span><span class="s0">if</span><span class="s1">(resultCode==RESULT_OK){ 
+                Toast.makeText(MainActivity.</span><span class="s0">this</span><span class="s1">, </span><span class="s3">&quot;BlueTooth Turned On&quot;</span><span class="s1">, Toast.LENGTH_LONG).show(); 
+                checkBT(); 
+            }</span><span class="s0">else</span><span class="s1">{ 
+                Toast.makeText(MainActivity.</span><span class="s0">this</span><span class="s1">, </span><span class="s3">&quot;Cancelled&quot;</span><span class="s1">, Toast.LENGTH_LONG).show(); 
+                checkBT(); 
+            } 
+        } 
+        </span><span class="s2">/* 
+ 
+        if (bluetoothAdapter.isEnabled()) { 
+            s.setText(&quot;enabled bluetooth&quot;); 
+            s.setBackgroundColor(Color.GREEN); 
+        }else{ 
+            s.setText(&quot;disabled bluetooth&quot;); 
+            s.setBackgroundColor(Color.RED); 
+        } 
+        */</span><span class="s1"> 
+    } 
+</span><span class="s2">//oncreate</span><span class="s1"> 
+ 
+ 
+    </span><span class="s0">public void </span><span class="s1">getApp(){ 
+        ActivityManager am = (ActivityManager) </span><span class="s0">this</span><span class="s1">.getSystemService(ACTIVITY_SERVICE); 
+        List&lt;ActivityManager.RunningTaskInfo&gt; taskInfo = am.getRunningTasks(</span><span class="s4">1</span><span class="s1">); 
+        Log.d(</span><span class="s3">&quot;topActivity&quot;</span><span class="s1">, </span><span class="s3">&quot;CURRENT Activity ::&quot; </span><span class="s1">+ taskInfo.get(</span><span class="s4">0</span><span class="s1">).topActivity.getClassName()); 
+        ComponentName componentInfo = taskInfo.get(</span><span class="s4">0</span><span class="s1">).topActivity; 
+        currapp = componentInfo.getPackageName(); 
+        Toast.makeText(MainActivity.</span><span class="s0">this</span><span class="s1">, currapp, Toast.LENGTH_LONG).show(); 
+ 
+    } 
+ 
+    </span><span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) { 
+ 
+        </span><span class="s0">super</span><span class="s1">.onCreate(savedInstanceState); 
+       setContentView(R.layout.activity_main);  </span><span class="s2">//nalouda vse na zacetku</span><span class="s1"> 
+        </span><span class="s0">final </span><span class="s1">TextView t = (TextView) findViewById(R.id.status_text); 
+        </span><span class="s0">final </span><span class="s1">BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); 
+        </span><span class="s0">final </span><span class="s1">Button button = (Button) findViewById(R.id.button); 
+        </span><span class="s0">final </span><span class="s1">Button button2 = (Button) findViewById(R.id.button2); 
+ 
+ 
+ 
+ 
+        </span><span class="s2">//take first package and set bg to the button</span><span class="s1"> 
+        </span><span class="s0">try</span><span class="s1"> 
+        { 
+            Drawable d = getPackageManager().getApplicationIcon(</span><span class="s3">&quot;org.prowl.torquefree&quot;</span><span class="s1">); 
+            button.setBackground(d); 
+        } 
+        </span><span class="s0">catch </span><span class="s1">(PackageManager.NameNotFoundException e) 
+        { 
+            </span><span class="s0">return</span><span class="s1">; 
+        } 
+ 
+        </span><span class="s2">//take second package, set bg to button</span><span class="s1"> 
+        </span><span class="s0">try</span><span class="s1"> 
+        { 
+            Drawable d = getPackageManager().getApplicationIcon(</span><span class="s3">&quot;org.xbmc.kodi&quot;</span><span class="s1">); 
+            button2.setBackground(d); 
+        } 
+        </span><span class="s0">catch </span><span class="s1">(PackageManager.NameNotFoundException e) 
+        { 
+            </span><span class="s0">return</span><span class="s1">; 
+        } 
+ 
+        </span><span class="s2">//notif test</span><span class="s1"> 
+ 
+            </span><span class="s2">//prepare notification</span><span class="s1"> 
+            </span><span class="s2">//dodal za v7  tisto pred new</span><span class="s1"> 
+ 
+ 
+        NotificationCompat.Builder mBuilder = (android.support.v7.app.NotificationCompat.Builder) 
+                    </span><span class="s0">new </span><span class="s1">NotificationCompat.Builder(</span><span class="s0">this</span><span class="s1">) 
+                            .setSmallIcon(R.drawable.notif) 
+                            .setContentTitle(</span><span class="s3">&quot;App switcher&quot;</span><span class="s1">) 
+                            .setContentText(</span><span class="s3">&quot;Click me to switch apps!&quot;</span><span class="s1">) 
+                            .setOngoing(</span><span class="s0">true</span><span class="s1">); 
+ 
+        </span><span class="s2">//intent mogoce pac za event?</span><span class="s1"> 
+        Intent intent = </span><span class="s0">new </span><span class="s1">Intent(Intent.ACTION_MAIN); 
+        intent.setComponent(</span><span class="s0">new </span><span class="s1">ComponentName(</span><span class="s3">&quot;org.xbmc.kodi&quot;</span><span class="s1">,</span><span class="s3">&quot;org.xbmc.kodi.MainActivity&quot;</span><span class="s1">)); 
+ 
+        PendingIntent contentIntent = PendingIntent.getActivity(</span><span class="s0">this</span><span class="s1">, </span><span class="s4">0</span><span class="s1">, 
+                intent, PendingIntent.FLAG_UPDATE_CURRENT); 
+        mBuilder.setContentIntent(contentIntent); 
+ 
+        </span><span class="s2">// Sets an ID for the notification</span><span class="s1"> 
+        </span><span class="s0">int </span><span class="s1">mNotificationId = </span><span class="s4">001</span><span class="s1">; 
+        </span><span class="s2">// Gets an instance of the NotificationManager service</span><span class="s1"> 
+        NotificationManager mNotifyMgr = 
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE); 
+        </span><span class="s2">// Builds the notification and issues it.</span><span class="s1"> 
+        mNotifyMgr.notify(mNotificationId, mBuilder.build()); 
+ 
+ 
+ 
+        </span><span class="s2">//for cancelling test is in the bfirst button action</span><span class="s1"> 
+ 
+ 
+        </span><span class="s2">//sets according to bluetooth status</span><span class="s1"> 
+        </span><span class="s0">if </span><span class="s1">(!mBluetoothAdapter.isEnabled()) { 
+            t.setText(</span><span class="s3">&quot;disabled bluetooth&quot;</span><span class="s1">); 
+            t.setBackgroundColor(Color.RED); 
+ 
+        }</span><span class="s0">else</span><span class="s1">{ 
+            t.setText(</span><span class="s3">&quot;enabled bluetooth&quot;</span><span class="s1">); 
+            t.setBackgroundColor(Color.GREEN); 
+        } 
+ 
+ 
+        </span><span class="s2">//first button click</span><span class="s1"> 
+        button.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() { 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onClick(View v) { 
+                getApp(); 
+                </span><span class="s2">//test disable notify</span><span class="s1"> 
+                NotificationManager notifManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); 
+                notifManager.cancelAll(); 
+ 
+                Log.i(TAG,</span><span class="s3">&quot;button clicked&quot;</span><span class="s1">); 
+                </span><span class="s0">if </span><span class="s1">(mBluetoothAdapter == </span><span class="s0">null</span><span class="s1">) { 
+                    </span><span class="s2">// Device does not support Bluetooth</span><span class="s1"> 
+                    Log.i(TAG,</span><span class="s3">&quot;no bluetooth support&quot;</span><span class="s1">); 
+                } </span><span class="s0">else </span><span class="s1">{ 
+                    </span><span class="s0">if </span><span class="s1">(!mBluetoothAdapter.isEnabled()) { 
+                        t.setText(</span><span class="s3">&quot;disabled bluetooth&quot;</span><span class="s1">); 
+                        t.setBackgroundColor(Color.RED); 
+                        </span><span class="s2">//if not enabled mrequest</span><span class="s1"> 
+                        Intent enableBtIntent = </span><span class="s0">new </span><span class="s1">Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE); 
+                        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT); 
+                    }</span><span class="s0">else</span><span class="s1">{ 
+                        t.setText(</span><span class="s3">&quot;enabled bluetooth&quot;</span><span class="s1">); 
+                        t.setBackgroundColor(Color.GREEN); 
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage(</span><span class="s3">&quot;org.prowl.torquefree&quot;</span><span class="s1">); 
+                        </span><span class="s0">if </span><span class="s1">(launchIntent != </span><span class="s0">null</span><span class="s1">) { 
+                           </span><span class="s2">// startActivity(launchIntent);//null pointer check in case package name was not found</span><span class="s1"> 
+                        } 
+ 
+                    } 
+                } 
+ 
+            } 
+        }); 
+ 
+        </span><span class="s2">//second button click</span><span class="s1"> 
+        button2.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() { 
+            </span><span class="s0">public void </span><span class="s1">onClick(View v) { 
+                Log.i(TAG,</span><span class="s3">&quot;button clicked&quot;</span><span class="s1">); 
+                </span><span class="s0">if </span><span class="s1">(mBluetoothAdapter == </span><span class="s0">null</span><span class="s1">) { 
+                    </span><span class="s2">// Device does not support Bluetooth</span><span class="s1"> 
+                    Log.i(TAG,</span><span class="s3">&quot;no bluetooth support&quot;</span><span class="s1">); 
+                } </span><span class="s0">else </span><span class="s1">{ 
+                    </span><span class="s0">if </span><span class="s1">(!mBluetoothAdapter.isEnabled()) { 
+                        t.setText(</span><span class="s3">&quot;disabled bluetooth&quot;</span><span class="s1">); 
+                        t.setBackgroundColor(Color.RED); 
+                        </span><span class="s2">//button.setBackgroundColor(Color.RED);</span><span class="s1"> 
+                        Intent enableBtIntent = </span><span class="s0">new </span><span class="s1">Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE); 
+                        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT); 
+                    }</span><span class="s0">else</span><span class="s1">{ 
+                        t.setText(</span><span class="s3">&quot;enabled bluetooth&quot;</span><span class="s1">); 
+                        t.setBackgroundColor(Color.GREEN); 
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage(</span><span class="s3">&quot;org.xbmc.kodi&quot;</span><span class="s1">); 
+                        </span><span class="s0">if </span><span class="s1">(launchIntent != </span><span class="s0">null</span><span class="s1">) { 
+                           </span><span class="s2">// startActivity(launchIntent);//null pointer check in case package name was not found</span><span class="s1"> 
+                        } 
+ 
+                    } 
+                } 
+ 
+            } 
+        }); 
+ 
+ 
+ 
+ 
+ 
+        startRepeatingTask(); 
+    } 
+ 
+ 
+ 
+ 
+} 
+</span></pre>
+</body>
+</html>
